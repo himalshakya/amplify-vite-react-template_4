@@ -121,17 +121,6 @@ const schema = a.schema({
 
   // Mutations
   // 2. Define your mutation with the return type and, optionally, arguments
-  likePost: a
-    .mutation()
-    // arguments that this query accepts
-    .arguments({
-      postId: a.string()
-    })
-    // return type of the query
-    .returns(a.ref('Post'))
-    // only allow signed-in users to call this API
-    .authorization(allow => [allow.authenticated()]),
-
     bulkCreateStates: (ctx) => ({
       resolver: a.mutation()
         .arguments({
