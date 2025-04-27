@@ -118,6 +118,93 @@ const schema = a.schema({
     course: a.belongsTo('Course', 'courseId'),
   })
   .authorization(allow => [allow.owner()]),
+
+  // Mutations
+  // 2. Define your mutation with the return type and, optionally, arguments
+  likePost: a
+    .mutation()
+    // arguments that this query accepts
+    .arguments({
+      postId: a.string()
+    })
+    // return type of the query
+    .returns(a.ref('Post'))
+    // only allow signed-in users to call this API
+    .authorization(allow => [allow.authenticated()]),
+
+    bulkCreateStates: (ctx) => ({
+      resolver: a.mutation()
+        .arguments({
+          courses: a.array(
+            a.object({
+              id: a.id().required(),
+              name: a.enum(['CO', 'CT', 'NY']),
+              displayName: a.string(),
+            })
+          ).required()
+        })
+        .returns(
+          a.object({
+            successCount: a.integer(),
+            failedCount: a.integer(),
+            failedItems: a.array(
+              a.object({
+                index: a.integer(),
+                code: a.string(),
+                error: a.string()
+              })
+            )
+          })
+        )
+        .authorization((allow) => [
+          // This would typically be restricted to admins
+          allow.guest() // For demonstration purposes
+        ]),
+      handler: async (event) => {
+        const { arguments: args } = event;
+        const states = args.courses;
+        
+        const results = {
+          successCount: 0,
+          failedCount: 0,
+          failedItems: []
+        };
+        
+        // Process courses in states of 25 (DynamoDB limitation)
+        for (let i = 0; i < states.length; i += 25) {
+          const batch = states.slice(i, i + 25);
+          
+          // Process each course in the current batch
+          const batchPromises = batch.map(async (state, batchIndex) => {
+            const index = i + batchIndex;
+            
+            try {              
+              // Create the course
+              await ctx.data.State.create({
+                id: state.id,
+                name: state.name,
+                displayName: state.displayName,
+              });
+              
+              results.successCount++;
+            } catch (error: unknown) {
+              results.failedCount++;
+              results.failedItems.push({
+                // index,
+                // code: state.id,
+                error: error.message
+              });
+            }
+          });
+          
+          // Wait for all operations in this batch to complete
+          await Promise.all(batchPromises);
+        }
+        
+        return results;
+      }
+    }),
+    
 });
 
 export type Schema = ClientSchema<typeof schema>;
