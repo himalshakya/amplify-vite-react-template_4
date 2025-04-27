@@ -119,8 +119,92 @@ const schema = a.schema({
   })
   .authorization(allow => [allow.owner()]),
 
+  /*
+  likePost: a
+    .mutation()
+    .arguments({ postId: a.id() })
+    .returns(a.ref('Post'))
+    .authorization(allow => [allow.authenticated()])
+    .handler(a.handler.custom({
+      dataSource: a.ref('Post'),
+      entry: './increment-like.js'
+    }))
+  */
+
   // Mutations
   // 2. Define your mutation with the return type and, optionally, arguments
+  bulkCreateStates: a.mutation()
+    .arguments({
+      states: a.array(
+        a.object({
+          id: a.id().required(),
+          name: a.enum(['CO', 'CT', 'NY']),
+          displayName: a.string(),
+        })
+      ).required()
+    })
+    .returns(
+      a.object({
+        successCount: a.integer(),
+        failedCount: a.integer(),
+        failedItems: a.array(
+          a.object({
+            index: a.integer(),
+            code: a.string(),
+            error: a.string()
+          })
+        )
+      })
+    )
+    .authorization((allow) => [
+      // This would typically be restricted to admins
+      allow.guest() // For demonstration purposes
+    ]),
+    // .handler: async (event) => {
+    //   const { arguments: args } = event;
+    //   const states = args.courses;
+      
+    //   const results = {
+    //     successCount: 0,
+    //     failedCount: 0,
+    //     failedItems: []
+    //   };
+      
+    //   // Process courses in states of 25 (DynamoDB limitation)
+    //   for (let i = 0; i < states.length; i += 25) {
+    //     const batch = states.slice(i, i + 25);
+        
+    //     // Process each course in the current batch
+    //     const batchPromises = batch.map(async (state, batchIndex) => {
+    //       const index = i + batchIndex;
+          
+    //       try {              
+    //         // Create the course
+    //         await ctx.data.State.create({
+    //           id: state.id,
+    //           name: state.name,
+    //           displayName: state.displayName,
+    //         });
+            
+    //         results.successCount++;
+    //       } catch (error: unknown) {
+    //         results.failedCount++;
+    //         results.failedItems.push({
+    //           // index,
+    //           // code: state.id,
+    //           error: error.message
+    //         });
+    //       }
+    //     });
+        
+    //     // Wait for all operations in this batch to complete
+    //     await Promise.all(batchPromises);
+    //   }
+      
+    //   return results;
+    // }),
+
+    /*
     bulkCreateStates: (ctx) => ({
       resolver: a.mutation()
         .arguments({
@@ -145,10 +229,7 @@ const schema = a.schema({
             )
           })
         )
-        .authorization((allow) => [
-          // This would typically be restricted to admins
-          allow.guest() // For demonstration purposes
-        ]),
+        
       handler: async (event) => {
         const { arguments: args } = event;
         const states = args.courses;
@@ -192,8 +273,12 @@ const schema = a.schema({
         
         return results;
       }
-    }),
-    
+    })
+    .authorization((allow) => [
+      // This would typically be restricted to admins
+      allow.guest() // For demonstration purposes
+    ]),
+    */
 });
 
 export type Schema = ClientSchema<typeof schema>;
