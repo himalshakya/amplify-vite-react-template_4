@@ -6,12 +6,50 @@ adding a new "isDone" field as a boolean. The authorization rule below
 specifies that any user authenticated via an API key can "create", "read",
 "update", and "delete" any "Todo" records.
 =========================================================================*/
+
+// Define the input type for a single Todo creation within the batch mutation
+const CreateTodoInput = a.input({
+  title: a.string().required(),
+  content: a.string(),
+});
+
+// Define the Lambda function handler for the 'createTodos' mutation
+export const createTodosHandler = defineFunction({
+  // Reference the data resource defined above
+  entry: './createTodosHandler.ts' // Path to the handler code
+});
+
 const schema = a.schema({
   Todo: a
-    .model({
-      content: a.string(),
-    })
-    .authorization(allow => [allow.owner()]),
+  .model({
+    id: a.id(), // Explicitly define ID if needed by custom logic, otherwise Amplify adds it
+    title: a.string().required(),
+    content: a.string(),
+    // Optional: Add owner field if using owner-based authorization strictly
+    // owner: a.string()
+  })
+  // Add authorization rules for the model
+  .authorization((allow) => [
+    allow.ownerDefinedIn("owner"), // Requires 'owner' field in model
+    allow.authenticated().to(['create', 'read']), // Allow authenticated users to create and read
+    // allow.authenticated("identityPool").to(['read']), // Redundant if using the above 'read'
+    allow.guest("identityPool").to(['read']) // Allow guests to read
+  ]),
+
+// Define the custom mutation 'createTodos'
+createTodos: a
+  .mutation()
+  // Input is an array of CreateTodoInput objects
+  .arguments({ todos: a.ref(CreateTodoInput).array().required() })
+  // Returns an array of the created Todo objects (or potentially just IDs or a success status)
+  // Returning the full Todo object might require fetching after creation
+  .returns(a.ref('Todo').array()) // Returning an array of Todos
+  // Specify the handler function for this mutation
+  .handler(a.handler.function('createTodosHandler'))
+  // Add authorization rules for the custom mutation
+  .authorization(allow => [allow.authenticated()]), // Only authenticated users can call this
+
+  ////////////////////////////////////
   
   coursesv2: a.model({
     id: a.id().required(),
