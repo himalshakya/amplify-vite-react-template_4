@@ -133,16 +133,16 @@ const schema = a.schema({
 
   // Mutations
   // 2. Define your mutation with the return type and, optionally, arguments
-  // bulkCreateStates: a.mutation()
-  //   .arguments({
-  //     states: a.array(
-  //       a.object({
-  //         id: a.id().required(),
-  //         name: a.enum(['CO', 'CT', 'NY']),
-  //         displayName: a.string(),
-  //       })
-  //     ).required()
-  //   })
+  bulkCreateStates: a.mutation()
+    .arguments({
+      states: a.array(
+        a.object({
+          id: a.id().required(),
+          name: a.enum(['CO', 'CT', 'NY']),
+          displayName: a.string(),
+        })
+      ).required()
+    })
   //   .returns(
   //     a.object({
   //       successCount: a.integer(),
@@ -156,10 +156,10 @@ const schema = a.schema({
   //       )
   //     })
   //   )
-  //   .authorization((allow) => [
-  //     // This would typically be restricted to admins
-  //     allow.guest() // For demonstration purposes
-  //   ]),
+    .authorization((allow) => [
+      // This would typically be restricted to admins
+      allow.guest() // For demonstration purposes
+    ]),
     // .handler: async (event) => {
     //   const { arguments: args } = event;
     //   const states = args.courses;
