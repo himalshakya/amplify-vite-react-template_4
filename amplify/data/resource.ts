@@ -133,12 +133,9 @@ const schema = a.schema({
 
   // Mutations
   // 2. Define your mutation with the return type and, optionally, arguments
-  CreateStateListInput: a.input({
-    todos: a.array(State) // Input type for a list of Todo objects
-  }),
   bulkCreateStates: a.mutation()
     .arguments({
-      states: CreateStateListInput
+      states: a.ref('State').array()
     })
   //   .returns(
   //     a.object({
