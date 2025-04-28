@@ -7,17 +7,17 @@ specifies that any user authenticated via an API key can "create", "read",
 "update", and "delete" any "Todo" records.
 =========================================================================*/
 
-// Define the input type for a single Todo creation within the batch mutation
-const CreateTodoInput = a.customType({
-  title: a.string().required(),
-  content: a.string(),
-});
+// // Define the input type for a single Todo creation within the batch mutation
+// const CreateTodoInput = a.customType({
+//   title: a.string().required(),
+//   content: a.string(),
+// });
 
-// Define the Lambda function handler for the 'createTodos' mutation
-export const createTodosHandler = defineFunction({
-  // Reference the data resource defined above
-  entry: './createTodosHandler.ts' // Path to the handler code
-});
+// // Define the Lambda function handler for the 'createTodos' mutation
+// export const createTodosHandler = defineFunction({
+//   // Reference the data resource defined above
+//   entry: './createTodosHandler.ts' // Path to the handler code
+// });
 
 const schema = a.schema({
   Todo: a
