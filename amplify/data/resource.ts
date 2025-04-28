@@ -135,13 +135,12 @@ const schema = a.schema({
   // 2. Define your mutation with the return type and, optionally, arguments
   bulkCreateStates: a.mutation()
     .arguments({
-      states: a.array(
-        a.object({
+      states: 
+        a.customType({
           id: a.id().required(),
           name: a.enum(['CO', 'CT', 'NY']),
           displayName: a.string(),
-        })
-      ).required()
+        }).array().required()
     })
   //   .returns(
   //     a.object({
