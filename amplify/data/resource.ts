@@ -1,4 +1,4 @@
-import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
+import { type ClientSchema, a, defineData, defineFunction } from "@aws-amplify/backend";
 
 /*== STEP 1 ===============================================================
 The section below creates a Todo database table with a "content" field. Try
@@ -40,7 +40,7 @@ const schema = a.schema({
 createTodos: a
   .mutation()
   // Input is an array of CreateTodoInput objects
-  .arguments({ todos: a.ref('CreateTodoInput').array().required() })
+  .arguments({ todos: a.ref(CreateTodoInput).array().required() })
   // Returns an array of the created Todo objects (or potentially just IDs or a success status)
   // Returning the full Todo object might require fetching after creation
   .returns(a.ref('Todo').array()) // Returning an array of Todos
