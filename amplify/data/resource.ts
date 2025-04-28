@@ -8,7 +8,7 @@ specifies that any user authenticated via an API key can "create", "read",
 =========================================================================*/
 
 // Define the input type for a single Todo creation within the batch mutation
-const CreateTodoInput = a.input({
+const CreateTodoInput = a.customType({
   title: a.string().required(),
   content: a.string(),
 });
@@ -40,7 +40,7 @@ const schema = a.schema({
 createTodos: a
   .mutation()
   // Input is an array of CreateTodoInput objects
-  .arguments({ todos: a.ref(CreateTodoInput).array().required() })
+  .arguments({ todos: a.ref('CreateTodoInput').array().required() })
   // Returns an array of the created Todo objects (or potentially just IDs or a success status)
   // Returning the full Todo object might require fetching after creation
   .returns(a.ref('Todo').array()) // Returning an array of Todos
