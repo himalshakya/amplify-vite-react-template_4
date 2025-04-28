@@ -33,14 +33,14 @@ const schema = a.schema({
     allow.ownerDefinedIn("owner"), // Requires 'owner' field in model
     allow.authenticated().to(['create', 'read']), // Allow authenticated users to create and read
     // allow.authenticated("identityPool").to(['read']), // Redundant if using the above 'read'
-    allow.guest("identityPool").to(['read']) // Allow guests to read
+    // allow.guest("identityPool").to(['read']) // Allow guests to read
   ]),
 
 // Define the custom mutation 'createTodos'
 createTodos: a
   .mutation()
   // Input is an array of CreateTodoInput objects
-  .arguments({ todos: a.ref(CreateTodoInput).array().required() })
+  .arguments({ todos: a.ref('CreateTodoInput').array().required() })
   // Returns an array of the created Todo objects (or potentially just IDs or a success status)
   // Returning the full Todo object might require fetching after creation
   .returns(a.ref('Todo').array()) // Returning an array of Todos
