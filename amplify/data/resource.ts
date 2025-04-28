@@ -119,41 +119,41 @@ const schema = a.schema({
   })
   .authorization(allow => [allow.owner()]),
 
-  /*
-  likePost: a
-    .mutation()
-    .arguments({ postId: a.id() })
-    .returns(a.ref('Post'))
-    .authorization(allow => [allow.authenticated()])
-    .handler(a.handler.custom({
-      dataSource: a.ref('Post'),
-      entry: './increment-like.js'
-    }))
-  */
+  // /*
+  // likePost: a
+  //   .mutation()
+  //   .arguments({ postId: a.id() })
+  //   .returns(a.ref('Post'))
+  //   .authorization(allow => [allow.authenticated()])
+  //   .handler(a.handler.custom({
+  //     dataSource: a.ref('Post'),
+  //     entry: './increment-like.js'
+  //   }))
+  // */
 
-  // Mutations
-  // 2. Define your mutation with the return type and, optionally, arguments
-  bulkCreateStates: a.mutation()
-    .arguments({
-      states: a.ref('State').array()
-    })
-  //   .returns(
-  //     a.object({
-  //       successCount: a.integer(),
-  //       failedCount: a.integer(),
-  //       failedItems: a.array(
-  //         a.object({
-  //           index: a.integer(),
-  //           code: a.string(),
-  //           error: a.string()
-  //         })
-  //       )
-  //     })
-  //   )
-    .authorization((allow) => [
-      // This would typically be restricted to admins
-      allow.guest() // For demonstration purposes
-    ]),
+  // // Mutations
+  // // 2. Define your mutation with the return type and, optionally, arguments
+  // bulkCreateStates: a.mutation()
+  //   .arguments({
+  //     states: a.ref('State').array()
+  //   })
+  // //   .returns(
+  // //     a.object({
+  // //       successCount: a.integer(),
+  // //       failedCount: a.integer(),
+  // //       failedItems: a.array(
+  // //         a.object({
+  // //           index: a.integer(),
+  // //           code: a.string(),
+  // //           error: a.string()
+  // //         })
+  // //       )
+  // //     })
+  // //   )
+  //   .authorization((allow) => [
+  //     // This would typically be restricted to admins
+  //     allow.guest() // For demonstration purposes
+  //   ]),
     // .handler: async (event) => {
     //   const { arguments: args } = event;
     //   const states = args.courses;
