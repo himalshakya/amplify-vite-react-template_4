@@ -36,18 +36,18 @@ const schema = a.schema({
     // allow.guest("identityPool").to(['read']) // Allow guests to read
   ]),
 
-// Define the custom mutation 'createTodos'
-createTodos: a
-  .mutation()
-  // Input is an array of CreateTodoInput objects
-  .arguments({ todos: a.ref('CreateTodoInput').array().required() })
-  // Returns an array of the created Todo objects (or potentially just IDs or a success status)
-  // Returning the full Todo object might require fetching after creation
-  .returns(a.ref('Todo').array()) // Returning an array of Todos
-  // Specify the handler function for this mutation
-  .handler(a.handler.function('createTodosHandler'))
-  // Add authorization rules for the custom mutation
-  .authorization(allow => [allow.authenticated()]), // Only authenticated users can call this
+// // Define the custom mutation 'createTodos'
+// createTodos: a
+//   .mutation()
+//   // Input is an array of CreateTodoInput objects
+//   .arguments({ todos: a.ref('CreateTodoInput').array().required() })
+//   // Returns an array of the created Todo objects (or potentially just IDs or a success status)
+//   // Returning the full Todo object might require fetching after creation
+//   .returns(a.ref('Todo').array()) // Returning an array of Todos
+//   // Specify the handler function for this mutation
+//   .handler(a.handler.function('createTodosHandler'))
+//   // Add authorization rules for the custom mutation
+//   .authorization(allow => [allow.authenticated()]), // Only authenticated users can call this
 
   ////////////////////////////////////
   
